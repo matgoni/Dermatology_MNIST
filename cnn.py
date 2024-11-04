@@ -297,7 +297,7 @@ class RedNeuronal:
     def __init__(self, image, label):
         #Iniciar las redes por separado
         self.red_1 = Propuesta_1(image, label)
-        #self.red_2 = Propuesta_2(image, label)
+        self.red_2 = Propuesta_2(image, label)
         self.red_3 = Propuesta_3(image, label)
         self.red_4 = Propuesta_4(image, label)
         self.red_5 = Propuesta_5(image, label)
@@ -305,7 +305,7 @@ class RedNeuronal:
         #Crear los modelos de cada red
         try:
             self.red_1.CrearModelo()
-        #    self.red_2.CrearModelo()
+            self.red_2.CrearModelo()
             self.red_3.CrearModelo()
             self.red_4.CrearModelo()
             self.red_5.CrearModelo()
@@ -315,7 +315,7 @@ class RedNeuronal:
     def EvaluarModelos(self):
         try:
             self.red_1.EvaluarModelo()
-        #    self.red_2.EvaluarModelo()
+            self.red_2.EvaluarModelo()
             self.red_3.EvaluarModelo()
             self.red_4.EvaluarModelo()
             self.red_5.EvaluarModelo()
@@ -325,7 +325,7 @@ class RedNeuronal:
     def Predecir(self, nuevasImgs):
         try:
             prediccion_temp_1 = self.red_1.model.predict(nuevasImgs)
-        #    prediccion_temp_2 = self.red_2.model.predict(nuevasImgs)
+            prediccion_temp_2 = self.red_2.model.predict(nuevasImgs)
             prediccion_temp_3 = self.red_3.model.predict(nuevasImgs)
             prediccion_temp_4 = self.red_4.model.predict(nuevasImgs)
             prediccion_temp_5 = self.red_5.model.predict(nuevasImgs)
@@ -334,7 +334,7 @@ class RedNeuronal:
 
         try:
             prop_1 = np.argmax(prediccion_temp_1, axis=1)
-        #    prop_2 = np.argmax(prediccion_temp_2, axis=1)
+            prop_2 = np.argmax(prediccion_temp_2, axis=1)
             prop_3 = np.argmax(prediccion_temp_3, axis=1)
             prop_4 = np.argmax(prediccion_temp_4, axis=1)
             prop_5 = np.argmax(prediccion_temp_5, axis=1)
@@ -342,8 +342,10 @@ class RedNeuronal:
             print("Ocurrio un error en la selección final por modelo, favor de verificarlo")
 
         posibilidades_totales = []
-        for p1, p3, p4, p5 in zip(prop_1, prop_3, prop_4, prop_5):
-            posibilidades_totales.append(np.argmax([p1, p3, p4, p5]))
+        for p1, p2, p3, p4, p5 in zip(prop_1, prop_2, prop_3, prop_4, prop_5):
+            valores, cuentas = np.unique([p1, p2, p3, p4, p5], return_counts=True)
+            temp_mayorFrec = valores[np.argmax(cuentas)]
+            posibilidades_totales.append(temp_mayorFrec)
 
         return np.array(posibilidades_totales)
         
